@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="pt">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <title>Invitación DJ Party</title>
+    <link rel="stylesheet" href="styles/styles.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎉</text></svg>"
+    />
+  </head>
+  <body>
+    <!-- Animated envelope -->
+    <div id="intro-screen">
+      <h2>
+        Um convite especial <br />
+        está a chegar🎉
+      </h2>
+      <img
+        src="assets/envelope.png"
+        alt="Click to open"
+        id="envelope"
+        class="envelope-img"
+        onclick="launchConfetti()"
+      />
+      <div class="click-text">👆<br />Click</div>
+      <div id="flash"></div>
+    </div>
+
+    <!-- Hiden main content -->
+    <div id="main-content" style="display: none">
+      <h1>És nosso convidado especial 🎉</h1>
+      <h2>DJ Papi faz 54 anos!</h2>
+
+      <img src="assets/perfil3.gif" alt="DJ Party" class="event-img" />
+
+      <div class="dateCountdown">23 de agosto 2025 desde 21h até as 04h</div>
+      <div class="countdown" id="countdown"></div>
+
+      <a
+        class="button neon glow-border"
+        href="https://wa.me/351935372796?text=Confirmo%20minha%20assistência%20e%20tomo%20conta%20das%20seguintes%20informações%20que%20para%20a%20minha%20participação,%20tenho%20de:%0A%E2%80%A2%20Ir%20vestido/a%20de%20branco.%0A%E2%80%A2%20Levar%20todas%20as%20minhas%20bebidas,%20gelo,%20copos%20e%20adega.%0A%E2%80%A2%20Levar%20as%20carnes%20temperadas%20que%20quiser%20fazer%20para%20o%20churrasco.%20"
+        target="_blank"
+      >
+        Confirmar Assistência
+      </a>
+      <div class="notice">(Até 15 de agosto)</div>
+
+      <a
+        class="button"
+        href="https://maps.app.goo.gl/3v67cheJxktZ16eQ9"
+        target="_blank"
+        >Endereço: Quinta do Paraíso 54</a
+      >
+
+      <footer>
+        Designed by
+        <a href="https://www.instagram.com/rocacreatives/?hl=pt" target="_blank"
+          >Roca Creatives</a
+        >
+      </footer>
+
+      <div class="disco-lights" id="disco-lights"></div>
+    </div>
+
+    <audio id="bg-music" src="assets/music.mp3" preload="auto"></audio>
+
+    <script>
+      const envelope = document.getElementById("envelope");
+      const intro = document.getElementById("intro-screen");
+      const main = document.getElementById("main-content");
+      const music = document.getElementById("bg-music");
+      const flash = document.getElementById("flash");
+
+      envelope.addEventListener("click", () => {
+        music.play();
+        envelope.classList.add("open");
+
+        flash.style.display = "block";
+        flash.classList.add("flash-animate");
+
+        setTimeout(() => {
+          intro.style.display = "none";
+          main.style.display = "block";
+        }, 900);
+      });
+
+      // Countdown
+      const countdownElement = document.getElementById("countdown");
+      const eventDate = new Date("2025-08-23T21:00:00");
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = eventDate - now;
+        if (diff <= 0) {
+          countdownElement.innerHTML = "¡La fiesta ha comenzado!";
+          return;
+        }
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+        const minutes = Math.floor((diff / (1000 * 60)) % 60);
+        const seconds = Math.floor((diff / 1000) % 60);
+        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+      }
+
+      setInterval(updateCountdown, 1000);
+      updateCountdown();
+
+      // disco lights
+      const discoContainer = document.getElementById("disco-lights");
+      const colors = ["#ffb3ff", "#b3ffff", "#ffe6b3", "#d9b3ff", "#b3ffb3"];
+
+      function createLight() {
+        const light = document.createElement("div");
+        light.classList.add("light");
+        light.style.left = Math.random() * 100 + "%";
+        light.style.top = Math.random() * 100 + "%";
+        light.style.backgroundColor =
+          colors[Math.floor(Math.random() * colors.length)];
+        light.style.animationDuration = 1 + Math.random() * 2 + "s";
+        light.style.width = light.style.height = 10 + Math.random() * 20 + "px";
+        discoContainer.appendChild(light);
+        setTimeout(() => {
+          discoContainer.removeChild(light);
+        }, 3000);
+      }
+
+      setInterval(createLight, 300);
+
+      function launchConfetti() {
+        const confettiColors = [
+          "#4caf50",
+          "#ffeb3b",
+          "#ff5722",
+          "#03a9f4",
+          "#e91e63",
+        ];
+        const confettiCount = 150;
+
+        // Eliminar contenedor previo si existe
+        const existingContainer = document.querySelector(".confetti-container");
+        if (existingContainer) {
+          document.body.removeChild(existingContainer);
+        }
+
+        const confettiContainer = document.createElement("div");
+        confettiContainer.className = "confetti-container";
+        confettiContainer.style.position = "fixed";
+        confettiContainer.style.top = "0";
+        confettiContainer.style.left = "0";
+        confettiContainer.style.width = "100%";
+        confettiContainer.style.height = "100%";
+        confettiContainer.style.pointerEvents = "none";
+        document.body.appendChild(confettiContainer);
+
+        for (let i = 0; i < confettiCount; i++) {
+          const confetti = document.createElement("div");
+          confetti.style.position = "absolute";
+          confetti.style.width = `${Math.random() * 8 + 4}px`;
+          confetti.style.height = confetti.style.width;
+          confetti.style.backgroundColor =
+            confettiColors[Math.floor(Math.random() * confettiColors.length)];
+          confetti.style.top = `${Math.random() * 100}%`;
+          confetti.style.left = `${Math.random() * 100}%`;
+          confetti.style.opacity = Math.random();
+          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+          confetti.style.animation = `fall ${
+            Math.random() * 3 + 2
+          }s ease-out forwards`;
+          confettiContainer.appendChild(confetti);
+        }
+
+        setTimeout(() => {
+          document.body.removeChild(confettiContainer);
+        }, 4000);
+      }
+
+      const style = document.createElement("style");
+      style.innerHTML = `
+            @keyframes fall {
+                0% {
+                    transform: translateY(-100vh) rotate(0deg);
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg);
+                }
+            }
+        `;
+      document.head.appendChild(style);
+    </script>
+  </body>
+</html>
