@@ -56,14 +56,27 @@ h2 {
   background-color: #d0d0d0;
   color: black;
   padding: 16px 28px;
-  margin: 12px;
+  margin: 12px 0;
   text-decoration: none;
   font-weight: bold;
   border-radius: 10px;
   transition: all 0.3s ease;
   font-size: 1.1em;
   min-width: 220px;
+  width: 100%;
+  max-width: 300px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+/* Container for vertical buttons */
+.button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin: 15px auto;
+  width: 100%;
 }
 
 .button:hover,
@@ -76,6 +89,9 @@ h2 {
 /* Neon effect */
 .neon {
   text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+    animation: pulse 2s infinite;
+  transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
 .glow-border {
@@ -95,6 +111,7 @@ h2 {
   color: orange;
   text-shadow: 0 0 5px #000;
   font-weight: bold;
+  margin-top: 5px;
 }
 
 /* Footer */
@@ -206,7 +223,11 @@ footer a:hover {
   h1 { font-size: 1.6em; }
   h2 { font-size: 1.2em; }
   .countdown { font-size: 1.5em; }
-  .button { padding: 14px 24px; font-size: 1em; min-width: 200px; }
+  .button { 
+    padding: 14px 20px; 
+    font-size: 1em; 
+    min-width: 200px; 
+  }
   .notice { font-size: 1.2em; }
   .event-img { max-width: 90%; width: 250px; }
   .envelope-img { width: 160px; }
@@ -216,5 +237,6 @@ footer a:hover {
 @media (max-height: 600px) {
   #intro-screen { padding: 10px; }
   h1, h2 { margin: 5px 0; }
-  .button { margin: 8px; padding: 12px 20px; }
+  .button { margin: 8px 0; padding: 12px 20px; }
 }
+
