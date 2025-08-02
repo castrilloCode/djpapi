@@ -4,41 +4,64 @@
     <meta charset="UTF-8" />
     <meta
       name="viewport"
-      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1, user-scalable=no"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no"
     />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="mobile-web-app-capable" content="yes" />
-    <title>Invitación DJ Party</title>
+    <meta name="theme-color" content="#000000" />
+    <title>Convite DJ Party</title>
+
+    <!-- Preload recursos clave -->
+    <link rel="preload" href="assets/envelope.png" as="image" />
+    <link rel="preload" href="assets/perfil3.gif" as="image" />
+    <link rel="preload" href="assets/music.mp3" as="audio" />
+
     <link rel="stylesheet" href="styles/styles.css" />
+
+    <!-- Favicon dinámico -->
     <link
       rel="icon"
       href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎉</text></svg>"
     />
+
+    <!-- Evita que el contenido se agrande al rotar -->
+    <style>
+      html,
+      body {
+        touch-action: manipulation;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
   </head>
   <body>
-    <!-- Animated envelope -->
     <div id="intro-screen">
       <h2>
         Um convite especial <br />
-        está a chegar🎉
+        está a chegar 🎉
       </h2>
       <img
         src="assets/envelope.png"
-        alt="Click to open"
+        alt="Clique para abrir"
         id="envelope"
         class="envelope-img"
+        loading="eager"
         onclick="launchConfetti()"
       />
-      <div class="click-text">👆<br />Click</div>
+      <div class="click-text">👆<br />Clique</div>
       <div id="flash"></div>
     </div>
 
-    <!-- Hiden main content -->
+    <!-- Hide main content -->
     <div id="main-content" style="display: none">
       <h1>És nosso convidado especial 🎉</h1>
       <h2>DJ Papi faz 54 anos!</h2>
+      <img
+        src="assets/perfil3.gif"
+        alt="DJ Party"
+        class="event-img"
+        loading="eager"
+      />
 
-      <img src="assets/perfil3.gif" alt="DJ Party" class="event-img" />
 
       <div class="dateCountdown">23 de agosto 2025 desde 21h até as 04h</div>
       <div class="countdown" id="countdown"></div>
@@ -56,8 +79,9 @@
         class="button"
         href="https://maps.app.goo.gl/3v67cheJxktZ16eQ9"
         target="_blank"
-        >Endereço: Quinta do Paraíso 54</a
       >
+        Endereço: Quinta do Paraíso 54
+      </a>
 
       <footer>
         Designed by
@@ -69,9 +93,15 @@
       <div class="disco-lights" id="disco-lights"></div>
     </div>
 
-    <audio id="bg-music" src="assets/music.mp3" preload="auto"></audio>
+    <audio
+      id="bg-music"
+      src="assets/music.mp3"
+      preload="auto"
+      loop
+    ></audio>
 
     <script>
+      // === Elements ===
       const envelope = document.getElementById("envelope");
       const intro = document.getElementById("intro-screen");
       const main = document.getElementById("main-content");
@@ -79,40 +109,47 @@
       const flash = document.getElementById("flash");
 
       envelope.addEventListener("click", () => {
-        music.play();
+        music
+          .play()
+          .then(() => {
+            console.log("Música iniciada");
+          })
+          .catch((err) => {
+            console.warn("Autoplay bloqueado:", err.message);
+            alert("Por favor, toca nuevamente para activar la música.");
+          });
         envelope.classList.add("open");
 
         flash.style.display = "block";
         flash.classList.add("flash-animate");
-
         setTimeout(() => {
           intro.style.display = "none";
           main.style.display = "block";
         }, 900);
       });
 
-      // Countdown
       const countdownElement = document.getElementById("countdown");
       const eventDate = new Date("2025-08-23T21:00:00");
 
       function updateCountdown() {
         const now = new Date();
         const diff = eventDate - now;
+
         if (diff <= 0) {
-          countdownElement.innerHTML = "¡La fiesta ha comenzado!";
+          countdownElement.innerHTML = "🎉 A festa começou!";
           return;
         }
+
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
         const minutes = Math.floor((diff / (1000 * 60)) % 60);
         const seconds = Math.floor((diff / 1000) % 60);
+
         countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
       }
 
       setInterval(updateCountdown, 1000);
       updateCountdown();
-
-      // disco lights
       const discoContainer = document.getElementById("disco-lights");
       const colors = ["#ffb3ff", "#b3ffff", "#ffe6b3", "#d9b3ff", "#b3ffb3"];
 
@@ -124,15 +161,20 @@
         light.style.backgroundColor =
           colors[Math.floor(Math.random() * colors.length)];
         light.style.animationDuration = 1 + Math.random() * 2 + "s";
-        light.style.width = light.style.height = 10 + Math.random() * 20 + "px";
+        light.style.width = light.style.height = 8 + Math.random() * 12 + "px";
         discoContainer.appendChild(light);
         setTimeout(() => {
-          discoContainer.removeChild(light);
+          if (light.parentNode) {
+            discoContainer.removeChild(light);
+          }
         }, 3000);
       }
 
-      setInterval(createLight, 300);
+      const isMobile = window.innerWidth <= 768;
+      const interval = isMobile ? 500 : 300;
+      setInterval(createLight, interval);
 
+      // === Confeti animated ===
       function launchConfetti() {
         const confettiColors = [
           "#4caf50",
@@ -141,9 +183,8 @@
           "#03a9f4",
           "#e91e63",
         ];
-        const confettiCount = 150;
+        const confettiCount = isMobile ? 80 : 150;
 
-        // Eliminar contenedor previo si existe
         const existingContainer = document.querySelector(".confetti-container");
         if (existingContainer) {
           document.body.removeChild(existingContainer);
@@ -151,47 +192,53 @@
 
         const confettiContainer = document.createElement("div");
         confettiContainer.className = "confetti-container";
-        confettiContainer.style.position = "fixed";
-        confettiContainer.style.top = "0";
-        confettiContainer.style.left = "0";
-        confettiContainer.style.width = "100%";
-        confettiContainer.style.height = "100%";
-        confettiContainer.style.pointerEvents = "none";
+        Object.assign(confettiContainer.style, {
+          position: "fixed",
+          top: "0",
+          left: "0",
+          width: "100%",
+          height: "100%",
+          pointerEvents: "none",
+          zIndex: "1000",
+        });
         document.body.appendChild(confettiContainer);
 
         for (let i = 0; i < confettiCount; i++) {
           const confetti = document.createElement("div");
-          confetti.style.position = "absolute";
-          confetti.style.width = `${Math.random() * 8 + 4}px`;
-          confetti.style.height = confetti.style.width;
-          confetti.style.backgroundColor =
-            confettiColors[Math.floor(Math.random() * confettiColors.length)];
-          confetti.style.top = `${Math.random() * 100}%`;
-          confetti.style.left = `${Math.random() * 100}%`;
-          confetti.style.opacity = Math.random();
-          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
-          confetti.style.animation = `fall ${
-            Math.random() * 3 + 2
-          }s ease-out forwards`;
+          Object.assign(confetti.style, {
+            position: "absolute",
+            width: `${Math.random() * 8 + 4}px`,
+            height: confetti.style.width,
+            backgroundColor:
+              confettiColors[Math.floor(Math.random() * confettiColors.length)],
+            top: `${Math.random() * 100}%`,
+            left: `${Math.random() * 100}%`,
+            opacity: Math.random(),
+            transform: `rotate(${Math.random() * 360}deg)`,
+            animation: `fall ${Math.random() * 3 + 2}s ease-out forwards`,
+          });
           confettiContainer.appendChild(confetti);
         }
 
         setTimeout(() => {
-          document.body.removeChild(confettiContainer);
+          if (confettiContainer.parentNode) {
+            document.body.removeChild(confettiContainer);
+          }
         }, 4000);
       }
 
+      // === Confeti fall===
       const style = document.createElement("style");
       style.innerHTML = `
-            @keyframes fall {
-                0% {
-                    transform: translateY(-100vh) rotate(0deg);
-                }
-                100% {
-                    transform: translateY(100vh) rotate(360deg);
-                }
-            }
-        `;
+        @keyframes fall {
+          0% {
+            transform: translateY(-10vh) rotate(0deg);
+          }
+          100% {
+            transform: translateY(100vh) rotate(720deg);
+          }
+        }
+      `;
       document.head.appendChild(style);
     </script>
   </body>
