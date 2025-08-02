@@ -11,20 +11,35 @@
     <meta name="theme-color" content="#000000" />
     <title>Convite DJ Party</title>
 
-    <!-- Preload recursos clave -->
+    <!-- Preload critical assets -->
     <link rel="preload" href="assets/envelope.png" as="image" />
     <link rel="preload" href="assets/perfil3.gif" as="image" />
     <link rel="preload" href="assets/music.mp3" as="audio" />
 
+    <!-- Main stylesheet -->
     <link rel="stylesheet" href="styles/styles.css" />
 
-    <!-- Favicon dinámico -->
+    <!-- Favicon: Using emoji 🎉 via data URL (appears in browser tab/bookmark) -->
     <link
       rel="icon"
-      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎉</text></svg>"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎉</text></svg>"
+      type="image/svg+xml"
+    />
+    <link
+      rel="alternate icon"
+      href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f389.png"
+      type="image/png"
+      sizes="32x32"
     />
 
-    <!-- Evita que el contenido se agrande al rotar -->
+    <!-- Open Graph / Social Sharing Metadata (helps show 🎉 when shared) -->
+    <meta property="og:title" content="🎉 Convite DJ Party" />
+    <meta property="og:description" content="És nosso convidado especial! DJ Papi faz 54 anos!" />
+    <meta property="og:image" content="https://castrillocode.github.io/djpapi/assets/perfil3.gif" />
+    <meta property="og:url" content="https://castrillocode.github.io/djpapi/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Prevent zoom on input focus -->
     <style>
       html,
       body {
@@ -34,6 +49,7 @@
     </style>
   </head>
   <body>
+    <!-- Intro screen with animated envelope -->
     <div id="intro-screen">
       <h2>
         Um convite especial <br />
@@ -41,20 +57,21 @@
       </h2>
       <img
         src="assets/envelope.png"
-        alt="Clique para abrir"
+        alt="Click to open"
         id="envelope"
         class="envelope-img"
         loading="eager"
-        onclick="launchConfetti()"
       />
-      <div class="click-text">👆<br />Clique</div>
+      <div class="click-text">👆<br />Click</div>
       <div id="flash"></div>
     </div>
 
-    <!-- Hide main content -->
+    <!-- Main content (hidden until envelope is clicked) -->
     <div id="main-content" style="display: none">
       <h1>És nosso convidado especial 🎉</h1>
       <h2>DJ Papi faz 54 anos!</h2>
+
+      <!-- Event animated image (GIF) -->
       <img
         src="assets/perfil3.gif"
         alt="DJ Party"
@@ -62,10 +79,13 @@
         loading="eager"
       />
 
-
+      <!-- Event date -->
       <div class="dateCountdown">23 de agosto 2025 desde 21h até as 04h</div>
+
+      <!-- Countdown timer -->
       <div class="countdown" id="countdown"></div>
 
+      <!-- WhatsApp confirmation button -->
       <a
         class="button neon glow-border"
         href="https://wa.me/351935372796?text=Confirmo%20minha%20assistência%20e%20tomo%20conta%20das%20seguintes%20informações%20que%20para%20a%20minha%20participação,%20tenho%20de:%0A%E2%80%A2%20Ir%20vestido/a%20de%20branco.%0A%E2%80%A2%20Levar%20todas%20as%20minhas%20bebidas,%20gelo,%20copos%20e%20adega.%0A%E2%80%A2%20Levar%20as%20carnes%20temperadas%20que%20quiser%20fazer%20para%20o%20churrasco.%20"
@@ -75,6 +95,7 @@
       </a>
       <div class="notice">(Até 15 de agosto)</div>
 
+      <!-- Location button -->
       <a
         class="button"
         href="https://maps.app.goo.gl/3v67cheJxktZ16eQ9"
@@ -83,53 +104,56 @@
         Endereço: Quinta do Paraíso 54
       </a>
 
+      <!-- Footer -->
       <footer>
         Designed by
-        <a href="https://www.instagram.com/rocacreatives/?hl=pt" target="_blank"
-          >Roca Creatives</a
-        >
+        <a href="https://www.instagram.com/rocacreatives/?hl=pt" target="_blank">
+          Roca Creatives
+        </a>
       </footer>
 
+      <!-- Disco lights background effect -->
       <div class="disco-lights" id="disco-lights"></div>
     </div>
 
-    <audio
-      id="bg-music"
-      src="assets/music.mp3"
-      preload="auto"
-      loop
-    ></audio>
+    <!-- Background music (auto-plays after user interaction) -->
+    <audio id="bg-music" src="assets/music.mp3" preload="auto" loop></audio>
 
+    <!-- Scripts -->
     <script>
-      // === Elements ===
+      // Get DOM elements
       const envelope = document.getElementById("envelope");
       const intro = document.getElementById("intro-screen");
       const main = document.getElementById("main-content");
       const music = document.getElementById("bg-music");
       const flash = document.getElementById("flash");
 
+      // Handle envelope click (user interaction)
       envelope.addEventListener("click", () => {
-        music
-          .play()
-          .then(() => {
-            console.log("Música iniciada");
-          })
-          .catch((err) => {
-            console.warn("Autoplay bloqueado:", err.message);
-            alert("Por favor, toca nuevamente para activar la música.");
-          });
+        // Play music (allowed because of user click)
+        music.play().catch((err) => {
+          console.warn("Autoplay was blocked by browser", err);
+          // Optional: show a button to unmute if needed
+        });
+
+        // Add open animation to envelope
         envelope.classList.add("open");
 
+        // Flash effect
         flash.style.display = "block";
         flash.classList.add("flash-animate");
+
+        // Hide intro and show main content after animation
         setTimeout(() => {
           intro.style.display = "none";
           main.style.display = "block";
+          document.body.style.overflowY = "auto"; // Ensure scrolling is enabled
         }, 900);
       });
 
+      // Countdown timer
       const countdownElement = document.getElementById("countdown");
-      const eventDate = new Date("2025-08-23T21:00:00");
+      const eventDate = new Date("2025-08-23T21:00:00"); // August 23, 2025, 21:00
 
       function updateCountdown() {
         const now = new Date();
@@ -150,6 +174,8 @@
 
       setInterval(updateCountdown, 1000);
       updateCountdown();
+
+      // Disco lights effect
       const discoContainer = document.getElementById("disco-lights");
       const colors = ["#ffb3ff", "#b3ffff", "#ffe6b3", "#d9b3ff", "#b3ffb3"];
 
@@ -163,6 +189,8 @@
         light.style.animationDuration = 1 + Math.random() * 2 + "s";
         light.style.width = light.style.height = 8 + Math.random() * 12 + "px";
         discoContainer.appendChild(light);
+
+        // Remove light after animation to prevent memory buildup
         setTimeout(() => {
           if (light.parentNode) {
             discoContainer.removeChild(light);
@@ -170,72 +198,84 @@
         }, 3000);
       }
 
+      // Adjust light frequency based on device (better performance on mobile)
       const isMobile = window.innerWidth <= 768;
-      const interval = isMobile ? 500 : 300;
-      setInterval(createLight, interval);
+      setInterval(createLight, isMobile ? 500 : 300);
 
-      // === Confeti animated ===
+      // Confetti effect (improved visibility)
       function launchConfetti() {
-        const confettiColors = [
-          "#4caf50",
-          "#ffeb3b",
-          "#ff5722",
-          "#03a9f4",
-          "#e91e63",
-        ];
-        const confettiCount = isMobile ? 80 : 150;
+        // Try to create confetti only if supported
+        try {
+          const confettiColors = [
+            "#4caf50",
+            "#ffeb3b",
+            "#ff5722",
+            "#03a9f4",
+            "#e91e63",
+          ];
+          const confettiCount = isMobile ? 80 : 120;
 
-        const existingContainer = document.querySelector(".confetti-container");
-        if (existingContainer) {
-          document.body.removeChild(existingContainer);
-        }
+          // Remove any existing confetti container
+          const existing = document.querySelector(".confetti-container");
+          if (existing) existing.remove();
 
-        const confettiContainer = document.createElement("div");
-        confettiContainer.className = "confetti-container";
-        Object.assign(confettiContainer.style, {
-          position: "fixed",
-          top: "0",
-          left: "0",
-          width: "100%",
-          height: "100%",
-          pointerEvents: "none",
-          zIndex: "1000",
-        });
-        document.body.appendChild(confettiContainer);
-
-        for (let i = 0; i < confettiCount; i++) {
-          const confetti = document.createElement("div");
-          Object.assign(confetti.style, {
-            position: "absolute",
-            width: `${Math.random() * 8 + 4}px`,
-            height: confetti.style.width,
-            backgroundColor:
-              confettiColors[Math.floor(Math.random() * confettiColors.length)],
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            opacity: Math.random(),
-            transform: `rotate(${Math.random() * 360}deg)`,
-            animation: `fall ${Math.random() * 3 + 2}s ease-out forwards`,
+          const container = document.createElement("div");
+          container.className = "confetti-container";
+          Object.assign(container.style, {
+            position: "fixed",
+            top: "0",
+            left: "0",
+            width: "100%",
+            height: "100%",
+            pointerEvents: "none",
+            zIndex: "1000",
           });
-          confettiContainer.appendChild(confetti);
-        }
+          document.body.appendChild(container);
 
-        setTimeout(() => {
-          if (confettiContainer.parentNode) {
-            document.body.removeChild(confettiContainer);
+          // Create confetti pieces
+          for (let i = 0; i < confettiCount; i++) {
+            const piece = document.createElement("div");
+            Object.assign(piece.style, {
+              position: "absolute",
+              width: `${Math.random() * 8 + 4}px`,
+              height: piece.style.width,
+              backgroundColor:
+                confettiColors[Math.floor(Math.random() * confettiColors.length)],
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+              opacity: Math.random(),
+              transform: `rotate(${Math.random() * 360}deg)`,
+              animation: `fall ${Math.random() * 3 + 2}s ease-out forwards`,
+            });
+            container.appendChild(piece);
           }
-        }, 4000);
+
+          // Clean up after animation
+          setTimeout(() => {
+            if (container.parentNode) {
+              document.body.removeChild(container);
+            }
+          }, 4000);
+        } catch (e) {
+          console.warn("Confetti effect failed:", e);
+          // Silently fail if not supported
+        }
       }
 
-      // === Confeti fall===
+      // Add confetti animation to envelope
+      envelope.addEventListener("click", launchConfetti);
+
+      // Define animation for confetti (falling with rotation)
       const style = document.createElement("style");
-      style.innerHTML = `
+      style.textContent = `
         @keyframes fall {
           0% {
             transform: translateY(-10vh) rotate(0deg);
+            opacity: 1;
           }
           100% {
             transform: translateY(100vh) rotate(720deg);
+            opacity: 0;
           }
         }
       `;

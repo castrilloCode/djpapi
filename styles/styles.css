@@ -1,53 +1,105 @@
+/* Reset and base styles */
+* {
+  box-sizing: border-box;
+}
+
+/* Body with scroll enabled */
 body {
   margin: 0;
   font-family: 'Arial', sans-serif;
-  background: url('../assets/BG.jpg') no-repeat center center fixed;
+  background: #000 url('../assets/BG.jpg') no-repeat center center;
   background-size: cover;
+  background-attachment: scroll;
   color: #000000;
   text-align: center;
   padding: 20px;
-  overflow: hidden;
+  min-height: 100vh;
+  overflow-y: auto;    /* ✅ Allows vertical scrolling */
+  overflow-x: hidden;  /* Prevents horizontal scroll */
+  position: relative;
 }
 
+/* Headings */
 h1 {
   color: #ffffff;
-  font-size: 2em;
+  font-size: 1.8em;
+  margin: 10px 0;
 }
 
 h2 {
   color: #dedddd;
+  font-size: 1.3em;
 }
 
+/* Event image */
 .event-img {
-  max-width: 75%;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  max-width: 90%;
+  width: 280px;
+  height: auto;
+  border-radius: 15px;
+  margin: 15px auto;
+  display: block;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
+/* Countdown timer */
 .countdown {
-  font-size: 2em;
-  margin: 20px 0;
+  font-size: 1.8em;
+  margin: 15px 0;
   color: #fff;
+  text-shadow: 0 0 10px #000;
 }
 
+/* Buttons */
 .button {
   display: inline-block;
-  background-color: rgb(208, 208, 208);
+  background-color: #d0d0d0;
   color: black;
-  padding: 15px 25px;
-  margin: 10px;
+  padding: 16px 28px;
+  margin: 12px;
   text-decoration: none;
   font-weight: bold;
-  border-radius: 8px;
-  transition: background 0.3s;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  font-size: 1.1em;
+  min-width: 220px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
-.button:hover {
+.button:hover,
+.button:focus {
   background-color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
+/* Neon effect */
+.neon {
+  text-shadow: 0 0 5px #fff, 0 0 10px #fff;
+}
+
+.glow-border {
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+}
+
+/* Date and notice */
+.dateCountdown,
+.notice {
+  font-size: 1.1em;
+  color: #ccc;
+  margin: 8px 0;
+}
+
+.notice {
+  font-size: 1.3em;
+  color: orange;
+  text-shadow: 0 0 5px #000;
+  font-weight: bold;
+}
+
+/* Footer */
 footer {
-  margin-top: 40px;
+  margin-top: 30px;
   font-size: 0.9em;
   color: #dfdfdf;
 }
@@ -55,21 +107,14 @@ footer {
 footer a {
   color: orange;
   text-decoration: none;
+  font-weight: bold;
 }
 
-.dateCountdown, .notice {
-  font-size: 1.2em;
-  color: #ccc;
-  margin-bottom: 10px;
+footer a:hover {
+  text-decoration: underline;
 }
 
-.notice {
-  margin-top: 5px;
-  font-size: 1.5em;
-  text-shadow:#000;
-  color: orange;
-}
-
+/* === Disco Lights === */
 .disco-lights {
   position: fixed;
   top: 0;
@@ -79,49 +124,57 @@ footer a {
   pointer-events: none;
   z-index: -1;
   overflow: hidden;
+  opacity: 0.7;
 }
 
 .light {
   position: absolute;
   border-radius: 50%;
-  opacity: 0.4;
-  animation: flash 1.5s infinite;
+  opacity: 0.3;
+  animation: flash 1.5s infinite ease-in-out;
+  filter: blur(1px);
 }
 
 @keyframes flash {
-  0%, 100% { opacity: 0.1; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.5); }
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.8; transform: scale(1.8); }
 }
 
-/* Envelope Intro */
+/* === Intro Screen (Envelope) === */
 #intro-screen {
   position: fixed;
   inset: 0;
-  background: linear-gradient(to bottom, #000, #222);
+  background: linear-gradient(135deg, #000 0%, #111 50%, #333 100%);
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
   z-index: 9999;
+  padding: 20px;
+  text-align: center;
+  pointer-events: auto;
 }
 
 .envelope-img {
-  width: 200px;
+  width: 180px;
+  max-width: 80vw;
   height: auto;
   cursor: pointer;
   animation: pulse 2s infinite;
   transition: transform 0.3s ease;
+  filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.4));
 }
 
 .envelope-img.open {
-  transform: scale(1.2) rotateX(20deg);
+  transform: scale(1.1) rotateX(20deg);
 }
 
 .click-text {
-  margin-top: 10px;
+  margin-top: 12px;
   color: white;
   font-weight: bold;
-  font-size: 1.2rem;
+  font-size: 1.3em;
+  text-shadow: 0 0 5px #000;
 }
 
 @keyframes pulse {
@@ -130,11 +183,7 @@ footer a {
   100% { transform: scale(1); opacity: 1; }
 }
 
-@keyframes blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.3; }
-}
-
+/* Flash effect on open */
 #flash {
   position: fixed;
   inset: 0;
@@ -144,20 +193,28 @@ footer a {
 }
 
 .flash-animate {
-  animation: flash-out 0.5s ease-out forwards;
+  animation: flash-out 0.6s ease-out forwards;
 }
 
 @keyframes flash-out {
   0% { opacity: 1; }
-  100% { opacity: 0; display: none; }
+  100% { opacity: 0; }
 }
 
-
-/* Btn neon */
-.neon {
-  text-shadow: 0 0 5px white;
+/* === Responsive Design === */
+@media (max-width: 480px) {
+  h1 { font-size: 1.6em; }
+  h2 { font-size: 1.2em; }
+  .countdown { font-size: 1.5em; }
+  .button { padding: 14px 24px; font-size: 1em; min-width: 200px; }
+  .notice { font-size: 1.2em; }
+  .event-img { max-width: 90%; width: 250px; }
+  .envelope-img { width: 160px; }
+  .dateCountdown { font-size: 1em; }
 }
 
-.glow-border {
-  box-shadow: 0 0 15px white;
+@media (max-height: 600px) {
+  #intro-screen { padding: 10px; }
+  h1, h2 { margin: 5px 0; }
+  .button { margin: 8px; padding: 12px 20px; }
 }
